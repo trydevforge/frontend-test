@@ -1,12 +1,10 @@
-import { Box, Typography } from '@/app/ui';
-import React from 'react'
+import { LoginContainer } from "@/app/containers";
+import React from "react";
 
 const LoginPage = () => {
-  return (
-    <Box>
-      <Typography variant='h4'>LoginPage</Typography>
-    </Box>
-  )
-}
+  return <LoginContainer />;
+};
+
+LoginPage.layout = "NO_LAYOUT";
 
 export default LoginPage;
