@@ -1,0 +1,3 @@
+export const UPDATE_USER = "UPDATE_USER";
+export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
+export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";

@@ -1,27 +1,38 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+// Middleware function to handle authentication
 export function middleware(request: NextRequest) {
-  // TODO: Implement private routes (/products, /products/[id]) - Navigate to /login if user is not logged in
-  // ...
+  const { pathname } = request.nextUrl;
 
-  // TODO: Implement Guest only routes (/login) - Navigate to /products if user is already logged in and tries to access /login
-  // ...
-
+  // Access cookies directly from the request
+  const token = request.cookies.get('token'); // Get the token cookie
   
-  const response = NextResponse.next();
-  return response
+  // Determine if the user is authenticated
+  const isAuthenticated = token !== undefined;
+
+  // Get the base URL to construct absolute URLs
+  const baseUrl = request.nextUrl.origin;
+  
+  // Private routes: Redirect to /login if the user is not logged in
+  const privateRoutes = ['/products', '/products/[id]'];
+
+
+  if (!isAuthenticated && privateRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.redirect(`${baseUrl}/login`);
+  }
+
+  // Guest only routes: Redirect to /products if the user is already logged in and tries to access /login
+  const guestOnlyRoutes = ['/login'];
+  if (isAuthenticated && guestOnlyRoutes.includes(pathname)) {
+    return NextResponse.redirect(`${baseUrl}/products`);
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: [
-      /*
-       * Match all request paths except for the ones starting with:
-       * - api (API routes)
-       * - _next/static (static files)
-       * - _next/image (image optimization files)
-       * - favicon.ico (favicon file)
-       */
-      '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    ],
-  }
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};

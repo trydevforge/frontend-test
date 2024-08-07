@@ -1,12 +1,18 @@
-import { Box, Typography } from '@/app/ui';
-import React from 'react'
+import { ProductDetailContainer } from '@/app/containers/product details';
+import { apiService } from '@/app/data/services';
+import { GetServerSideProps } from 'next';
 
-const ProductDetailPage = () => {
-  return (
-    <Box>
-      <Typography variant='h4'>ProductDetailPage</Typography>
-    </Box>
-  )
+
+export const getServerSideProps : GetServerSideProps = async (context) => {
+  const id = context?.params?.id as string;
+  const res = await apiService.get(`/product/${id}`);
+
+  return {
+    props: {
+      data: res || null,
+    },
+  };
 }
 
-export default ProductDetailPage;
+
+export default ProductDetailContainer 
