@@ -41,7 +41,6 @@ export const ProductDetailContainer: React.FC<ProductDetailProps> = ({
     description,
     price,
     rating,
-    stock,
     images,
     availabilityStatus,
     reviews,
@@ -69,7 +68,7 @@ export const ProductDetailContainer: React.FC<ProductDetailProps> = ({
       <Container>
         <ImageContainer>
           <StyledImage src={images[0]} alt={title} />
-   
+
         </ImageContainer>
         <ContentContainer>
           <Title variant="h1">{title}</Title>

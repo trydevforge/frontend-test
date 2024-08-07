@@ -21,8 +21,6 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const getLayout = (page: ReactElement, { layout, ...rest }: LayoutProps) => {
-
-  console.log(page, layout, rest);
   if (layout === "NO_LAYOUT") {
     return page;
   }
@@ -31,15 +29,15 @@ const getLayout = (page: ReactElement, { layout, ...rest }: LayoutProps) => {
 
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  
+
   return (
     <AppCacheProvider {...pageProps}>
       <NiceModal.Provider>
         <ThemeProvider theme={BaseTheme}>
           <QueryClientProvider client={queryClient}>
-          <SnackbarProvider>
-          <NextNProgress />
-          {getLayout(<Component {...pageProps} />, Component)}
+            <SnackbarProvider>
+              <NextNProgress />
+              {getLayout(<Component {...pageProps} />, Component)}
             </SnackbarProvider>
           </QueryClientProvider>
         </ThemeProvider>

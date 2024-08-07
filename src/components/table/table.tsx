@@ -21,13 +21,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChangeEvent, FC, memo, ReactElement, useMemo, useState } from "react";
-import { TableContainer } from "./styled";
+import { StickyTableCell, TableContainer } from "./styled";
 
 // Styles with styled-component
 export const StyledTableRow = styled(TableRow)`
-  &:nth-of-type(odd) {
-    background-color: #f1f1f1;
-  }
   &:last-child td,
   &:last-child th {
     border: 0;
@@ -116,7 +113,7 @@ export const TableUI: FC<TableProps> = ({
   };
 
   return (
-    <Paper elevation={2} sx={{ padding: "1rem" }}>
+    <Paper elevation={2} sx={{ paddingBlock: '1rem' }}>
       <Box paddingX="1rem">
         {headerComponent && <Box>{headerComponent}</Box>}
       </Box>
@@ -124,61 +121,69 @@ export const TableUI: FC<TableProps> = ({
       <TableContainer style={{ overflowX: "auto" }}>
         <MuiTable>
           {!isFetching && (
-       <TableHead>
-       {getHeaderGroups().map((headerGroup) => (
-         <TableRow key={headerGroup.id} className="bg-[#000]">
-           {headerGroup.headers.map((header) => (
-             <TableCell
-               key={header.id}
-               className="text-white text-sm font-cambon"
-               onClick={header.column.getToggleSortingHandler()} // Handle sorting toggle on header click
-               style={{
-                 cursor: "pointer", // Indicate that the header is clickable
-                 border: "1px solid #e0e0e0", // Add border to the header cells
-               }}
-             >
-               {header.isPlaceholder
-                 ? null
-                 : (
-                   <>
-                     {flexRender(
-                       header.column.columnDef.header,
-                       header.getContext()
-                     )}
-                     {header.column.getIsSorted() === 'asc'
-                       ? ' 🔼' // Up arrow for ascending
-                       : header.column.getIsSorted() === 'desc'
-                         ? ' 🔽' // Down arrow for descending
-                         : ''}
-                   </>
-                 )}
-             </TableCell>
-           ))}
-         </TableRow>
-       ))}
-     </TableHead>
+            <TableHead>
+              {getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="bg-[#000]">
+                  {headerGroup.headers.map((header) => {
+                    const TableCellComponent = header.id === 'Actions' ? StickyTableCell : TableCell;
+
+                    return (
+                      <TableCellComponent
+                        key={header.id}
+                        className="text-white text-sm font-cambon"
+                        onClick={header.column.getToggleSortingHandler()} // Handle sorting toggle on header click
+                        style={{
+                          cursor: "pointer", // Indicate that the header is clickable
+                          border: "1px solid #e0e0e0", // Add border to the header cells
+                        }}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : (
+                            <>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              {header.column.getIsSorted() === 'asc'
+                                ? ' 🔼' // Up arrow for ascending
+                                : header.column.getIsSorted() === 'desc'
+                                  ? ' 🔽' // Down arrow for descending
+                                  : ''}
+                            </>
+                          )}
+                      </TableCellComponent>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHead>
           )}
           <TableBody>
             {!isFetching ? (
               getRowModel()?.rows.map((row) => (
                 <StyledTableRow key={row.id} onClick={handleRow}>
-                 {row.getVisibleCells().map((cell, index) => (
-                    <TableCell
-                      onClick={() => onClickRow?.(cell, row)}
-                      key={cell.id}
-                      className="text-[#2E353A] text-base font-graphik"
-                      style={{
-                        borderRight: index < row.getVisibleCells().length - 1 ? "1px solid #e0e0e0" : undefined,
-                      }}
-                    >
-                      <Box sx={{
-                        width : cell.column.columnDef.size,
-                      }}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </Box>
-                      {/* {cell.column.columnDef.size} */}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell, index) => {
+                    const TableCellComponent = cell.id.includes('Actions') ? StickyTableCell : TableCell;
+
+                    return (
+                      <TableCellComponent
+                        onClick={() => onClickRow?.(cell, row)}
+                        key={cell.id}
+                        className="text-[#2E353A] text-base font-graphik"
+                        style={{
+                          borderRight: index < row.getVisibleCells().length - 1 ? "1px solid #e0e0e0" : undefined,
+                        }}
+                      >
+                        <Box sx={{
+                          width: cell.column.columnDef.size,
+                        }}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Box>
+                        {/* {cell.column.columnDef.size} */}
+                      </TableCellComponent>
+                    )
+                  })}
                 </StyledTableRow>
               ))
             ) : (
@@ -187,7 +192,7 @@ export const TableUI: FC<TableProps> = ({
                   <TableRow key={skeleton}>
                     {Array.from({ length: columnCount }, (x, i) => i).map((elm) => (
                       <TableCell key={elm}>
-                        <Skeleton height={skeletonHeight} width={200}/>
+                        <Skeleton height={skeletonHeight} width={200} />
                       </TableCell>
                     ))}
                   </TableRow>

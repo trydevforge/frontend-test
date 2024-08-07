@@ -10,14 +10,13 @@ export const LoginPageContainer = styled(Box)(({ theme }) => ({
   width: "100vw", // Full width for responsiveness
   backgroundColor: theme.palette.background.default,
   color: theme.palette.text.primary,
-  "& .form": {
+  "& form": {
     display: "flex",
     flexDirection: "column",
-    gap : theme.spacing(2), // Spacing between inputs
+    gap: theme.spacing(2), // Spacing between inputs
     alignItems: "center",
     justifyContent: "center",
     background: theme.palette.background.paper, // Card-like background
-    boxShadow: theme.shadows[5],
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(4), // Padding for spacing
     width: '100%', // Ensure it takes full width on small screens
